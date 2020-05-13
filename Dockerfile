@@ -1,11 +1,11 @@
-FROM armpits/portola-openjdk-build:v10-x86_64 AS portola-java-build
+FROM armpits/portola-openjdk-build:v11-x86_64 AS portola-java-build
 
 FROM alpine:3.11
 
-ARG OPENJDK_VERSION=openjdk-11
-ARG JRE_VERSION=jre-11
+ARG OPENJDK_VERSION=openjdk-12
+ARG JRE_VERSION=jre-12
 ARG OPENJDK_VARIANT=server
-ARG BOOTJDK_VERSION=portola-openjdk-10-server-x86_64
+ARG BOOTJDK_VERSION=portola-openjdk-11-server-x86_64
 ARG ARCH=x86_64
 ARG PREFIX=/usr/local
 ARG TMP_DIR=/${OPENJDK_VERSION}-build
@@ -33,13 +33,14 @@ RUN apk update --no-cache && \
     libxrender-dev \
     libxtst-dev \
     libxt-dev \
+    libxrandr-dev \
     libffi-dev \
     alsa-lib-dev \
     cups-dev \
     fontconfig-dev && \
     mkdir ${TMP_DIR} && \
     mkdir ${TMP_DIR}/${OPENJDK_VERSION} && \
-    mkdir ${TMP_DIR}/${BOOTJDK_VERSION} 
+    mkdir ${TMP_DIR}/${BOOTJDK_VERSION}
 
 COPY --from=portola-java-build /${BOOTJDK_VERSION}.tar.xz ${TMP_DIR}/${BOOTJDK_VERSION}.tar.xz
 COPY src/portola-${OPENJDK_VERSION}-src.tar.xz ${TMP_DIR}/portola-${OPENJDK_VERSION}-src.tar.xz
@@ -51,9 +52,7 @@ RUN tar -C ${TMP_DIR}/${OPENJDK_VERSION} -xf ${TMP_DIR}/portola-${OPENJDK_VERSIO
     tar -C ${TMP_DIR}/${BOOTJDK_VERSION} -xf ${TMP_DIR}/${BOOTJDK_VERSION}.tar.xz && \
     ln -sf ${TMP_DIR}/${BOOTJDK_VERSION}/lib/server/libjvm.so ${PREFIX}/lib/libjvm.so && \
     cd ${TMP_DIR}/${OPENJDK_VERSION} && \
-    CONF=linux-${ARCH}-normal-${OPENJDK_VARIANT}-release \
-    MAKE_VERBOSE=y \
-    QUIETLY=  \
+    CONF=linux-${ARCH}-${OPENJDK_VARIANT}-release \
     LOG=debug \
     bash configure \
     --with-boot-jdk=${BOOTJDK_DIR} \
@@ -61,10 +60,8 @@ RUN tar -C ${TMP_DIR}/${OPENJDK_VERSION} -xf ${TMP_DIR}/portola-${OPENJDK_VERSIO
     --disable-warnings-as-errors && \
     make \
     JOBS=${CORES} \
-    MAKE_VERBOSE=y \
-    QUIETLY=  \
     LOG=debug \
-    CONF=linux-${ARCH}-normal-${OPENJDK_VARIANT}-release && \
+    CONF=linux-${ARCH}-${OPENJDK_VARIANT}-release && \
     make install && \
     ${PREFIX}/jvm/${OPENJDK_VERSION}-internal/bin/jlink \
     --compress=2 \
@@ -94,6 +91,7 @@ RUN apk del \
     libxrender-dev \
     libxtst-dev \
     libxt-dev \
+    libxrandr-dev \
     libffi-dev \
     alsa-lib-dev \
     cups-dev \
