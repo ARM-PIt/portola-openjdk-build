@@ -1,11 +1,11 @@
-FROM armpits/portola-openjdk-build:v12-x86_64 AS portola-java-build
+FROM armpits/portola-openjdk-build:v13-x86_64 AS portola-java-build
 
 FROM alpine:3.11
 
-ARG OPENJDK_VERSION=openjdk-13
-ARG JRE_VERSION=jre-13
+ARG OPENJDK_VERSION=openjdk-14
+ARG JRE_VERSION=jre-14
 ARG OPENJDK_VARIANT=server
-ARG BOOTJDK_VERSION=portola-openjdk-12-server-x86_64
+ARG BOOTJDK_VERSION=portola-openjdk-13-server-x86_64
 ARG ARCH=x86_64
 ARG PREFIX=/usr/local
 ARG TMP_DIR=/${OPENJDK_VERSION}-build
@@ -66,7 +66,7 @@ RUN tar -C ${TMP_DIR}/${OPENJDK_VERSION} -xf ${TMP_DIR}/portola-${OPENJDK_VERSIO
     ${PREFIX}/jvm/${OPENJDK_VERSION}-internal/bin/jlink \
     --compress=2 \
     --module-path ${PREFIX}/jvm/${OPENJDK_VERSION}-internal/jmods \
-    --add-modules java.base,java.logging,java.naming,java.xml,jdk.sctp,jdk.unsupported,java.sql,java.prefs,java.desktop,java.management,java.security.jgss,java.security.sasl \
+    --add-modules jdk.httpserver,jdk.sctp,jdk.unsupported,java.base,java.logging,java.naming,java.xml,java.sql,java.prefs,java.desktop,java.management,java.management.rmi,java.security.jgss,java.security.sasl,java.scripting \
     --no-header-files \
     --no-man-pages \
     --output ${TMP_DIR}/portola-${JRE_VERSION} && \
