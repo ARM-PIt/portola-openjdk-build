@@ -2,7 +2,7 @@ FROM alpine:3.11
 
 ARG OPENJDK_VERSION=openjdk-9
 ARG JRE_VERSION=jre-9
-ARG OPENJDK_VARIANT=server
+ARG OPENJDK_VARIANT=zero
 ARG BOOTJDK_VERSION=openjdk-8
 ARG ARCH=x86_64
 ARG PREFIX=/usr/local
@@ -58,16 +58,17 @@ COPY src/portola-${OPENJDK_VERSION}-src.tar.xz ${TMP_DIR}/portola-${OPENJDK_VERS
 RUN tar -C ${TMP_DIR}/${OPENJDK_VERSION} -xf ${TMP_DIR}/portola-${OPENJDK_VERSION}-src.tar.xz && \
     ln -sf ${BOOTJDK_DIR}/jre/lib/aarch32/server/libjvm.so /usr/local/lib/libjvm.so && \
     cd ${TMP_DIR}/${OPENJDK_VERSION} && \
-    CONF=linux-${ARCH}-normal-${OPENJDK_VARIANT}-release \
+    CONF=linux-arm-normal-${OPENJDK_VARIANT}-release \
     LOG=debug \
     bash configure \
     --with-boot-jdk=${BOOTJDK_DIR} \
     --with-jvm-variants=${OPENJDK_VARIANT} \
+    --build=arm-linux-gnueabihf \
     --disable-warnings-as-errors && \
     make \
     JOBS=${CORES} \
     LOG=debug \
-    CONF=linux-${ARCH}-normal-${OPENJDK_VARIANT}-release && \
+    CONF=linux-arm-normal-${OPENJDK_VARIANT}-release && \
     cd ${TMP_DIR}/${OPENJDK_VERSION} && \
     make install && \
     ${PREFIX}/jvm/${OPENJDK_VERSION}-internal/bin/jlink \
