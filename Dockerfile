@@ -21,7 +21,6 @@ RUN apk update --no-cache && \
     alpine-sdk \
     autoconf \
     bash \
-    clang \
     coreutils \
     mercurial \
     gawk \
@@ -52,8 +51,6 @@ RUN tar -C ${TMP_DIR}/${OPENJDK_VERSION} -xf ${TMP_DIR}/portola-${OPENJDK_VERSIO
     ln -sf ${TMP_DIR}/${BOOTJDK_VERSION}/lib/server/libjvm.so ${PREFIX}/lib/libjvm.so && \
     cd ${TMP_DIR}/${OPENJDK_VERSION} && \
     CONF=linux-${ARCH}-normal-${OPENJDK_VARIANT}-release \
-    MAKE_VERBOSE=y \
-    QUIETLY=  \
     LOG=debug \
     bash configure \
     --with-boot-jdk=${BOOTJDK_DIR} \
@@ -61,15 +58,13 @@ RUN tar -C ${TMP_DIR}/${OPENJDK_VERSION} -xf ${TMP_DIR}/portola-${OPENJDK_VERSIO
     --disable-warnings-as-errors && \
     make \
     JOBS=${CORES} \
-    MAKE_VERBOSE=y \
-    QUIETLY=  \
     LOG=debug \
     CONF=linux-${ARCH}-normal-${OPENJDK_VARIANT}-release && \
     make install && \
     ${PREFIX}/jvm/${OPENJDK_VERSION}-internal/bin/jlink \
     --compress=2 \
     --module-path ${PREFIX}/jvm/${OPENJDK_VERSION}-internal/jmods \
-    --add-modules java.base,java.logging,java.naming,java.xml,jdk.sctp,jdk.unsupported,java.sql,java.prefs,java.desktop,java.management,java.security.jgss,java.security.sasl \
+    --add-modules jdk.httpserver,jdk.sctp,jdk.unsupported,java.base,java.compiler,java.datatransfer,java.desktop,java.instrument,java.logging,java.management,java.management.rmi,java.naming,java.net.http,java.prefs,java.rmi,java.scripting,java.se,java.security.jgss,java.security.sasl,java.smartcardio,java.sql,java.sql.rowset,java.transaction.xa,java.xml,java.xml.crypto \
     --no-header-files \
     --no-man-pages \
     --output ${TMP_DIR}/portola-${JRE_VERSION} && \
@@ -82,7 +77,6 @@ RUN apk del \
     alpine-sdk \
     autoconf \
     bash \
-    clang \
     coreutils \
     mercurial \
     gawk \
