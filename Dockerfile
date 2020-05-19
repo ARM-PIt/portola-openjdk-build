@@ -51,7 +51,7 @@ RUN tar -C ${TMP_DIR}/${OPENJDK_VERSION} -xf ${TMP_DIR}/portola-${OPENJDK_VERSIO
     tar -C ${TMP_DIR}/${BOOTJDK_VERSION} -xf ${TMP_DIR}/${BOOTJDK_VERSION}.tar.xz && \
     ln -sf ${TMP_DIR}/${BOOTJDK_VERSION}/lib/server/libjvm.so ${PREFIX}/lib/libjvm.so && \
     cd ${TMP_DIR}/${OPENJDK_VERSION} && \
-    CONF=linux-${ARCH}-${OPENJDK_VARIANT}-release \
+    CONF=linux-arm-${OPENJDK_VARIANT}-release \
     LOG=debug \
     bash configure \
     --with-boot-jdk=${BOOTJDK_DIR} \
@@ -61,7 +61,7 @@ RUN tar -C ${TMP_DIR}/${OPENJDK_VERSION} -xf ${TMP_DIR}/portola-${OPENJDK_VERSIO
     make \
     JOBS=${CORES} \
     LOG=debug \
-    CONF=linux-${ARCH}-${OPENJDK_VARIANT}-release && \
+    CONF=linux-arm-${OPENJDK_VARIANT}-release && \
     make install && \
     ${PREFIX}/jvm/${OPENJDK_VERSION}-internal/bin/jlink \
     --compress=2 \
