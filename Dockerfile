@@ -65,7 +65,7 @@ RUN tar -C ${TMP_DIR}/${OPENJDK_VERSION} -xf ${TMP_DIR}/portola-${OPENJDK_VERSIO
     ${PREFIX}/jvm/${OPENJDK_VERSION}-internal/bin/jlink \
     --compress=2 \
     --module-path ${PREFIX}/jvm/${OPENJDK_VERSION}-internal/jmods \
-    --add-modules jdk.httpserver,jdk.sctp,jdk.unsupported,java.base,java.logging,java.xml.crypto,java.naming,java.transaction.xa,java.xml,java.rmi,java.sql,java.sql.rowset,java.net.http,java.prefs,java.desktop,java.management,java.smartcardio,java.se,java.security.jgss,java.security.sasl,java.scripting,java.compiler,java.datatransfer,java.instrument \    
+    --add-modules jdk.httpserver,jdk.sctp,jdk.unsupported,java.base,java.compiler,java.datatransfer,java.desktop,java.instrument,java.logging,java.management,java.management.rmi,java.naming,java.net.http,java.prefs,java.rmi,java.scripting,java.se,java.security.jgss,java.security.sasl,java.smartcardio,java.sql,java.sql.rowset,java.transaction.xa,java.xml,java.xml.crypto \    
     --no-header-files \
     --no-man-pages \
     --output ${TMP_DIR}/portola-${JRE_VERSION} && \
