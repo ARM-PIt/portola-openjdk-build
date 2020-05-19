@@ -1,11 +1,11 @@
-FROM armpits/portola-openjdk-build:v9-armhf AS portola-java-build
+FROM armpits/portola-openjdk-build:v10-armhf AS portola-java-build
 
 FROM alpine:3.11
 
-ARG OPENJDK_VERSION=openjdk-10
-ARG JRE_VERSION=jre-10
+ARG OPENJDK_VERSION=openjdk-11
+ARG JRE_VERSION=jre-11
 ARG OPENJDK_VARIANT=zero
-ARG BOOTJDK_VERSION=portola-openjdk-9-zero-armhf
+ARG BOOTJDK_VERSION=portola-openjdk-10-zero-armhf
 ARG ARCH=armhf
 ARG PREFIX=/usr/local
 ARG TMP_DIR=/${OPENJDK_VERSION}-build
@@ -66,7 +66,7 @@ RUN tar -C ${TMP_DIR}/${OPENJDK_VERSION} -xf ${TMP_DIR}/portola-${OPENJDK_VERSIO
     ${PREFIX}/jvm/${OPENJDK_VERSION}-internal/bin/jlink \
     --compress=2 \
     --module-path ${PREFIX}/jvm/${OPENJDK_VERSION}-internal/jmods \
-    --add-modules jdk.httpserver,jdk.sctp,jdk.unsupported,java.activation,java.base,java.compiler,java.corba,java.datatransfer,java.desktop,java.instrument,java.logging,java.management,java.management.rmi,java.naming,java.prefs,java.rmi,java.scripting,java.se,java.se.ee,java.security.jgss,java.security.sasl,java.smartcardio,java.sql,java.sql.rowset,java.transaction,java.xml,java.xml.bind,java.xml.crypto,java.xml.ws,java.xml.ws.annotation \
+    --add-modules jdk.httpserver,jdk.sctp,jdk.unsupported,java.base,java.compiler,java.datatransfer,java.desktop,java.instrument,java.logging,java.management,java.management.rmi,java.naming,java.net.http,java.prefs,java.rmi,java.scripting,java.se,java.security.jgss,java.security.sasl,java.smartcardio,java.sql,java.sql.rowset,java.transaction.xa,java.xml,java.xml.crypto \
     --no-header-files \
     --no-man-pages \
     --output ${TMP_DIR}/portola-${JRE_VERSION} && \
