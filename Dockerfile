@@ -5,7 +5,7 @@ FROM alpine:3.11
 ARG OPENJDK_VERSION=openjdk-12
 ARG JRE_VERSION=jre-12
 ARG OPENJDK_VARIANT=zero
-ARG BOOTJDK_VERSION=portola-openjdk-11-zero-x86_64
+ARG BOOTJDK_VERSION=portola-openjdk-11-zero-armhf
 ARG ARCH=armhf
 ARG PREFIX=/usr/local
 ARG TMP_DIR=/${OPENJDK_VERSION}-build
