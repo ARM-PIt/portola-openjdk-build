@@ -1,12 +1,12 @@
-FROM armpits/portola-openjdk-build:v11-x86_64 AS portola-java-build
+FROM armpits/portola-openjdk-build:v11-armhf AS portola-java-build
 
 FROM alpine:3.11
 
 ARG OPENJDK_VERSION=openjdk-12
 ARG JRE_VERSION=jre-12
-ARG OPENJDK_VARIANT=server
-ARG BOOTJDK_VERSION=portola-openjdk-11-server-x86_64
-ARG ARCH=x86_64
+ARG OPENJDK_VARIANT=zero
+ARG BOOTJDK_VERSION=portola-openjdk-11-zero-x86_64
+ARG ARCH=armhf
 ARG PREFIX=/usr/local
 ARG TMP_DIR=/${OPENJDK_VERSION}-build
 ARG BOOTJDK_DIR=${TMP_DIR}/${BOOTJDK_VERSION}
@@ -56,6 +56,7 @@ RUN tar -C ${TMP_DIR}/${OPENJDK_VERSION} -xf ${TMP_DIR}/portola-${OPENJDK_VERSIO
     bash configure \
     --with-boot-jdk=${BOOTJDK_DIR} \
     --with-jvm-variants=${OPENJDK_VARIANT} \
+    --build=arm-linux-gnueabihf \
     --disable-warnings-as-errors && \
     make \
     JOBS=${CORES} \
