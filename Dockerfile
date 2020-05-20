@@ -1,11 +1,11 @@
-FROM armpits/portola-openjdk-build:v11-armhf AS portola-java-build
+FROM armpits/portola-openjdk-build:v12-armhf AS portola-java-build
 
 FROM alpine:3.11
 
-ARG OPENJDK_VERSION=openjdk-12
-ARG JRE_VERSION=jre-12
+ARG OPENJDK_VERSION=openjdk-13
+ARG JRE_VERSION=jre-13
 ARG OPENJDK_VARIANT=zero
-ARG BOOTJDK_VERSION=portola-openjdk-11-zero-armhf
+ARG BOOTJDK_VERSION=portola-openjdk-12-zero-armhf
 ARG ARCH=armhf
 ARG PREFIX=/usr/local
 ARG TMP_DIR=/${OPENJDK_VERSION}-build
