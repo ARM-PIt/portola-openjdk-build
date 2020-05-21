@@ -10,6 +10,7 @@ ARG ARCH=x86_64
 ARG PREFIX=/usr/local
 ARG TMP_DIR=/${OPENJDK_VERSION}-build
 ARG BOOTJDK_DIR=${TMP_DIR}/${BOOTJDK_VERSION}
+ARG S3_URL_SRC=https://armpits-build-src.s3.us-east-2.amazonaws.com/openjdk/portola/src
 
 # CPU cores given to the build
 ARG CORES=4
@@ -42,12 +43,14 @@ RUN apk update --no-cache && \
     mkdir ${TMP_DIR}/${BOOTJDK_VERSION}
 
 COPY --from=portola-java-build /${BOOTJDK_VERSION}.tar.xz ${TMP_DIR}/${BOOTJDK_VERSION}.tar.xz
-COPY src/portola-${OPENJDK_VERSION}-src.tar.xz ${TMP_DIR}/portola-${OPENJDK_VERSION}-src.tar.xz
 
-#COPY src/${BOOTJDK_VERSION}.tar.xz ${TMP_DIR}/${BOOTJDK_VERSION}.tar.xz
-#COPY src/portola-${OPENJDK_VERSION}-src.tar.xz ${TMP_DIR}/portola-${OPENJDK_VERSION}-src.tar.xz
+# If providing your own sources add the archives to the src directory and name them as shown below.
+# Otherwise continue as-is to use prepared sources from the project Dockerhub and S3 bucket.
+# COPY src/portola-${OPENJDK_VERSION}-src.tar.xz ${TMP_DIR}/portola-${OPENJDK_VERSION}-src.tar.xz
+# COPY src/${BOOTJDK_VERSION}.tar.xz ${TMP_DIR}/${BOOTJDK_VERSION}.tar.xz
 
-RUN tar -C ${TMP_DIR}/${OPENJDK_VERSION} -xf ${TMP_DIR}/portola-${OPENJDK_VERSION}-src.tar.xz && \
+RUN curl -o ${TMP_DIR}/portola-${OPENJDK_VERSION}-src.tar.xz ${S3_URL_SRC}/portola-${OPENJDK_VERSION}-src.tar.xz && \
+    tar -C ${TMP_DIR}/${OPENJDK_VERSION} -xf ${TMP_DIR}/portola-${OPENJDK_VERSION}-src.tar.xz && \
     tar -C ${TMP_DIR}/${BOOTJDK_VERSION} -xf ${TMP_DIR}/${BOOTJDK_VERSION}.tar.xz && \
     ln -sf ${TMP_DIR}/${BOOTJDK_VERSION}/lib/server/libjvm.so ${PREFIX}/lib/libjvm.so && \
     cd ${TMP_DIR}/${OPENJDK_VERSION} && \
