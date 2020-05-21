@@ -52,10 +52,12 @@ RUN apk update --no-cache && \
 #     tar --numeric-owner -zcvf ${TMP_DIR}/portola-${OPENJDK_VERSION}-src.tar.xz -C /tmp/portola-${OPENJDK_VERSION}-src . && \
 #     rm -rf /tmp/portola-${OPENJDK_VERSION}-src
 
-# Otherwise get the full portola openjdk9 repository then tar and name it in local src directory for the COPY step below.
-COPY src/portola-${OPENJDK_VERSION}-src.tar.xz ${TMP_DIR}/portola-${OPENJDK_VERSION}-src.tar.xz
+# Get the full portola openjdk9 repository then tar and name it in local src directory for the COPY step below.
+# Otherwise proceed as-is to use prepared tar archive from the project S3 bucket.
+# COPY src/portola-${OPENJDK_VERSION}-src.tar.xz ${TMP_DIR}/portola-${OPENJDK_VERSION}-src.tar.xz
 
-RUN tar -C ${TMP_DIR}/${OPENJDK_VERSION} -xf ${TMP_DIR}/portola-${OPENJDK_VERSION}-src.tar.xz && \
+RUN curl -o ${TMP_DIR}/portola-${OPENJDK_VERSION}-src.tar.xz https://armpits-build-src.s3.us-east-2.amazonaws.com/openjdk/portola/src/portola-${OPENJDK_VERSION}-src.tar.xz && \
+    tar -C ${TMP_DIR}/${OPENJDK_VERSION} -xf ${TMP_DIR}/portola-${OPENJDK_VERSION}-src.tar.xz && \
     ln -sf ${BOOTJDK_DIR}/jre/lib/aarch32/server/libjvm.so /usr/local/lib/libjvm.so && \
     cd ${TMP_DIR}/${OPENJDK_VERSION} && \
     CONF=linux-${ARCH}-normal-${OPENJDK_VARIANT}-release \
